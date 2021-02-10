@@ -4,29 +4,35 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyListApp
+namespace MyList2
 {
     class Program
     {
         static void Main(string[] args)
         {
+
             MyList lst = new MyList();
 
-
-            lst.DeleteByIndex(1);
 
             lst.AddLast(100);
 
 
-            for(int i=1; i<=10; i++)
+            Console.WriteLine(lst);
+
+           // lst.DeleteByIndex(0);
+
+            Console.WriteLine(lst);
+
+            
+
+            for (int i = 1; i <= 10; i++)
             {
                 lst.AddLast(i);
             }
 
+            lst.DeleteByIndex(0);
 
             Console.WriteLine(lst);
-
-
         }
     }
 }

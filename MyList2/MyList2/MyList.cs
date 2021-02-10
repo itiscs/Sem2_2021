@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyListApp
+namespace MyList2
 {
     public class Elem
     {
@@ -25,7 +25,7 @@ namespace MyListApp
 
         public void AddLast(int x)
         {
-            var newElem = new Elem() { Info = x};
+            var newElem = new Elem() { Info = x };
 
             if (First == null)
             {
@@ -73,19 +73,16 @@ namespace MyListApp
             else
             {
                 var prevElem = First;
-                for(int i = 1; i < ind; i++)
+                for (int i = 1; i < ind; i++)
                 {
                     prevElem = prevElem.Next;
-                    if(prevElem == null)
+                    if (prevElem == null)
                         throw new ArgumentException();
                 }
                 if (prevElem.Next != null)
                     prevElem.Next = prevElem.Next.Next;
 
             }
-
-
-
 
         }
 
@@ -95,7 +92,7 @@ namespace MyListApp
         {
             var sb = new StringBuilder();
             var elem = First;
-            while(elem != null)
+            while (elem != null)
             {
                 sb.Append($"{elem.Info} -> ");
                 elem = elem.Next;
