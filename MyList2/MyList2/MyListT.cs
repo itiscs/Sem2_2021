@@ -6,26 +6,63 @@ using System.Threading.Tasks;
 
 namespace MyList2
 {
-    public class Elem
+    public class MyClass:IComparable
     {
-        public int Info { get; set; }
-        public Elem Next { get; set; }
+        public int P1 { get; set; }
+        public int P2 { get; set; }
+
+        public MyClass(int p1, int p2)
+        {
+            P1 = p1;
+            P2 = p2;
+        }
+        public int CompareTo(object obj)
+        {
+            var ob = obj as MyClass;
+            if(ob != null)
+            {
+                if (P1 + P2 == ob.P1 + ob.P2)
+                    return 0;
+                if (P1 + P2 > ob.P1 + ob.P2)
+                    return 1;
+                if (P1 + P2 < ob.P1 + ob.P2)
+                    return -1;
+                //return (P1 + P2).CompareTo(ob.P1 + ob.P2);
+            }
+            throw new ArgumentException("object not clear");
+        }
+
+
+        public override string ToString()
+        {
+            return $"({P1},{P2})";
+        }
     }
 
 
-    public class MyList
-    {
-        public Elem First { get; private set; }
 
-        public void AddFirst(int x)
+    public class Elem<T> //where T:IComparable 
+    {
+        public T Info { get; set; }
+        public Elem<T> Next { get; set; }
+    }
+
+
+    public class MyList<T> where T:IComparable
+    {
+        public Elem<T> First { get; private set; }
+
+
+        
+        public void AddFirst(T x)
         {
-            var newElem = new Elem() { Info = x, Next = First };
+            var newElem = new Elem<T>() { Info = x, Next = First };
             First = newElem;
         }
 
-        public void AddLast(int x)
+        public void AddLast(T x)
         {
-            var newElem = new Elem() { Info = x };
+            var newElem = new Elem<T>() { Info = x };
 
             if (First == null)
             {
@@ -51,7 +88,7 @@ namespace MyList2
             return 0;
         }
 
-        public Elem FindByValue(int x)
+        public Elem<T> FindByValue(T x)
         {
             //ToDo
             return null;
@@ -59,8 +96,16 @@ namespace MyList2
 
         public bool IsSorted()
         {
-            //ToDo
-            return false;
+            Elem<T> el = First;
+            
+            while (el.Next != null)
+            {
+                if (el.Info.CompareTo(el.Next.Info) > 0 )
+                    return false;
+                el = el.Next;
+            }
+
+            return true;
         }
 
 
@@ -85,7 +130,7 @@ namespace MyList2
             }
 
         }
-                public override string ToString()
+        public override string ToString()
         {
             var sb = new StringBuilder();
             var elem = First;
@@ -96,7 +141,6 @@ namespace MyList2
             }
             sb.Append("null");
             return sb.ToString();
-
         }
 
 
@@ -104,4 +148,5 @@ namespace MyList2
 
 
     }
+
 }
