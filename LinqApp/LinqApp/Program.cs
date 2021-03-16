@@ -4,15 +4,83 @@ using System.Linq;
 
 namespace LinqApp
 {
+    public class Fitness
+    {
+        public int ClientId { get; set; }
+        public int Year { get; set; }
+        public int Month { get; set; }
+        public int Duration { get; set; }
+
+        public override string ToString()
+        {
+            return $"Client - {ClientId} Year- {Year} Month - {Month} Duration - {Duration}";
+        }
+
+        public static List<Fitness> CreateList()
+        {
+            var lst = new List<Fitness>();
+            lst.Add(new Fitness() { ClientId = 1, Year = 2020, Month = 1, Duration = 10 });
+            lst.Add(new Fitness() { ClientId = 1, Year = 2020, Month = 2, Duration = 23 });
+            lst.Add(new Fitness() { ClientId = 1, Year = 2020, Month = 3, Duration = 14 });
+            lst.Add(new Fitness() { ClientId = 3, Year = 2020, Month = 12, Duration = 8 });
+            lst.Add(new Fitness() { ClientId = 3, Year = 2021, Month = 11, Duration = 12 });
+            lst.Add(new Fitness() { ClientId = 4, Year = 2020, Month = 10, Duration = 13 });
+            lst.Add(new Fitness() { ClientId = 4, Year = 2021, Month = 9, Duration = 30 });
+            lst.Add(new Fitness() { ClientId = 2, Year = 2021, Month = 1, Duration = 5 });
+            lst.Add(new Fitness() { ClientId = 2, Year = 2020, Month = 3, Duration = 8 });
+            lst.Add(new Fitness() { ClientId = 2, Year = 2020, Month = 4, Duration = 7 });
+
+
+            return lst;
+
+        }
+
+
+    }
 
     class Program
     {
         public delegate int MyDeleg(int a, int b);
 
-
-
         static void Main(string[] args)
         {
+            //TestLinqWithListOfInt();
+
+            var lst = Fitness.CreateList();
+            lst.ForEach(f => { Console.WriteLine(f); });
+            Console.WriteLine("***************************");
+
+         //   var res = lst.Where(f => f.Year == 2020).Select(f => new { Id = f.ClientId, f.Duration });
+                //.TakeWhile(f=>f.Month!=4);
+
+            var f1 = lst.FirstOrDefault(f => f.Duration > 50);
+            if(f1!=null)
+                Console.WriteLine($"first - {f1}");
+            else
+                Console.WriteLine($"first - null");
+
+            var res1 = lst.GroupBy(f => f.ClientId).Select(gr => new {Sum = gr.Sum(f=>f.Duration), Id = gr.Key })
+                        .OrderByDescending(f=>f.Sum).ThenBy(f=>f.Id);
+            var res = lst.GroupBy(f => new { f.ClientId, f.Year });
+
+            foreach (var gr in res)
+            // Console.WriteLine($"Client - {fit.Key}  {fit.Where(f=>f.Year==2020).Count()} ");
+            {
+                Console.WriteLine($"Client - {gr.Key}  {gr.Sum(f=>f.Duration)}:");
+                foreach (var fit in gr)
+                    Console.WriteLine($"      {fit} ");
+            }
+
+            foreach (var f in res1)
+                Console.WriteLine(f);
+
+
+
+        }
+
+        static void TestLinqWithListOfInt()
+        {
+
             Func<int, int, int> f1 = new Func<int, int, int>((a, b) => a + b);
             Action<int> act = new Action<int>(x => { Console.WriteLine(x); });
 
@@ -28,9 +96,9 @@ namespace LinqApp
             }
 
             var arr = new int[100];
-            for(int i=0;i<100;i++)
+            for (int i = 0; i < 100; i++)
             {
-                arr[i] = i+1;
+                arr[i] = i + 1;
             }
 
             int k1 = 24;
@@ -43,8 +111,8 @@ namespace LinqApp
                 t = arr.Where(x => (101 - x) % 11 == k1 - 20);
 
             Console.WriteLine("Номера задач ");
-            
-            foreach(int num in t)
+
+            foreach (int num in t)
             {
                 Console.WriteLine(num);
             }
@@ -55,5 +123,8 @@ namespace LinqApp
 
             Console.WriteLine(lst.Where(x => x < 10).Skip(3).Average());
         }
+
+
+        
     }
 }
