@@ -140,12 +140,13 @@ namespace LinqApp
         {
             var studs = new List<Student>();
             studs.Add(new Student()
-               { IdStudent=1, FIO="Ivanov", Marks={4,3,2,5,4,3,4,3});
+               { IdStudent=1, FIO="Ivanov", Marks={4,3,2,5,4,2,2,2,5,2,2,3,3,3,3,3,4,3}});
             studs.Add(new Student()
-               { IdStudent = 2, FIO = "Petrov", Marks = { 3, 3, 3, 5, 3, 3, 3, 3 });
+            { IdStudent = 2, FIO = "Petrov", Marks = { 3, 3, 3, 5, 3, 3, 3, 3 } });
 
 
-            foreach (var m in studs.SelectMany(s => s.Marks))
+            foreach (var m in studs.SelectMany(s => s.Marks)
+              .GroupBy(g=>g).Select(g=>new { g.Key, Count = g.Count() }))
                 Console.WriteLine(m);            
 
 
