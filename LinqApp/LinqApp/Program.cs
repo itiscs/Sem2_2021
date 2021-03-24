@@ -4,6 +4,15 @@ using System.Linq;
 
 namespace LinqApp
 {
+    public class Student
+    {
+        public int IdStudent { get; set; }
+        public string FIO{ get; set; }
+        public List<int> Marks { get; set; } = new List<int>();
+    }
+
+
+
     public class Fitness
     {
         public int ClientId { get; set; }
@@ -46,27 +55,76 @@ namespace LinqApp
         {
             //TestLinqWithListOfInt();
 
+            //TestFitness();
+
+            TestSelectMany();
+
+
+            var prods = Product.GenerateData();
+            var prices = Prices.GenerateData();
+
+            foreach (var p in prods)
+                Console.WriteLine(p);
+
+
+            foreach (var pr in prices)
+                Console.WriteLine(pr);
+
+            //var lst = prods.Join(prices, p => p.IdProduct, pr => pr.IdProduct,
+            //    (prod, price) => new
+            //    {
+            //        prod.IdProduct,
+            //        price.Shop,
+            //        prod.Category,
+            //        prod.Country,
+            //        price.Price
+            //    });
+
+            var lst = prods.Join(prices, p => p.IdProduct, pr => pr.IdProduct,
+                (prod, price) => new
+                {
+                    prod.IdProduct,
+                    price.Shop,
+                    prod.Category,
+                    prod.Country,
+                    price.Price
+                }).GroupBy(a => new { a.Shop, a.Category })
+                .Select(g => new { g.Key.Shop, g.Key.Category, Count =  g.Count()})
+                .OrderBy(s=>s.Shop).ThenBy(s=>s.Category);
+
+            foreach (var l in lst)
+            {
+                Console.WriteLine(l);
+            }
+
+
+
+
+        }
+
+        static void TestFitness()
+        {
             var lst = Fitness.CreateList();
             lst.ForEach(f => { Console.WriteLine(f); });
             Console.WriteLine("***************************");
 
-         //   var res = lst.Where(f => f.Year == 2020).Select(f => new { Id = f.ClientId, f.Duration });
-                //.TakeWhile(f=>f.Month!=4);
+            //   var res = lst.Where(f => f.Year == 2020).Select(f => new { Id = f.ClientId, f.Duration });
+            //.TakeWhile(f=>f.Month!=4);
 
             var f1 = lst.FirstOrDefault(f => f.Duration > 50);
-            if(f1!=null)
+            if (f1 != null)
                 Console.WriteLine($"first - {f1}");
             else
                 Console.WriteLine($"first - null");
 
-            var res1 = lst.GroupBy(f => f.ClientId).Select(gr => new {Sum = gr.Sum(f=>f.Duration), Id = gr.Key })
-                        .OrderByDescending(f=>f.Sum).ThenBy(f=>f.Id);
+            var res1 = lst.GroupBy(f => f.ClientId).Select(gr => new { Sum = gr.Sum(f => f.Duration), Id = gr.Key })
+                        .OrderByDescending(f => f.Sum).ThenBy(f => f.Id);
             var res = lst.GroupBy(f => new { f.ClientId, f.Year });
 
             foreach (var gr in res)
             // Console.WriteLine($"Client - {fit.Key}  {fit.Where(f=>f.Year==2020).Count()} ");
             {
-                Console.WriteLine($"Client - {gr.Key}  {gr.Sum(f=>f.Duration)}:");
+                Console.WriteLine($"Client - {gr.Key}  {gr.Sum(f => f.Duration)}:");
                 foreach (var fit in gr)
                     Console.WriteLine($"      {fit} ");
             }
@@ -75,7 +133,23 @@ namespace LinqApp
                 Console.WriteLine(f);
 
 
+        }
 
+
+        static void TestSelectMany()
+        {
+            var studs = new List<Student>();
+            studs.Add(new Student()
+               { IdStudent=1, FIO="Ivanov", Marks={4,3,2,5,4,3,4,3});
+            studs.Add(new Student()
+               { IdStudent = 2, FIO = "Petrov", Marks = { 3, 3, 3, 5, 3, 3, 3, 3 });
+
+
+            foreach (var m in studs.SelectMany(s => s.Marks))
+                Console.WriteLine(m);            
+
+
+            
         }
 
         static void TestLinqWithListOfInt()
