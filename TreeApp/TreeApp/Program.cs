@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TreeApp
 {
-    public class Elem<T>
+    public class Elem<T> where T:IComparable 
     {
         public T Info { get; set; }
         public Elem<T> Left { get; set; }
@@ -64,7 +64,7 @@ namespace TreeApp
 
     }
 
-    public class Tree<T>
+    public class Tree<T> where T:IComparable
     {
         public Elem<T> Root { get; set; }
 
@@ -165,6 +165,23 @@ namespace TreeApp
 
             Console.WriteLine(tree.MyOper((a, b) => a>b ? a : b , int.MinValue));
 
+
+
+            Console.WriteLine("******************************************");
+
+            SearchTree<int> st = new SearchTree<int>();
+            st.AddElem(10);
+            st.AddElem(5);
+            st.AddElem(15);
+            st.AddElem(3);
+            st.AddElem(8);
+            st.AddElem(12);
+            st.AddElem(20);
+            
+            Console.WriteLine(st);
+
+
+            Console.WriteLine(st.Contains(11));
 
 
 
