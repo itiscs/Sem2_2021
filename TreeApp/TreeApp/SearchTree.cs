@@ -67,6 +67,12 @@ namespace TreeApp
             return false;
         }
 
+        public void Delete(T data)
+        {
+            //TODO
+        }
+
+
 
 
 
